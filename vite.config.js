@@ -11,6 +11,7 @@ export default defineConfig({
     host: "0.0.0.0",
     base: '/fm/',
   },
+  base: '/fm/',
   optimizeDeps: {
     exclude: ["@sqlite.org/sqlite-wasm"],
   },
