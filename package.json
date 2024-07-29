@@ -33,5 +33,6 @@
     "react-time-ago": "^7.3.1",
     "sqlite3": "^5.1.7",
     "tinybase": "^4.7.1"
-  }
+  },
+  "homepage": "/fm/"
 }
