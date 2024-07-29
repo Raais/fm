@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import Chart from "react-apexcharts";
 
-export const ChartDailyDebit = ({ graphType, series, title, yformat }: any) => {
+export const ChartDailyDebit = ({ graphType, series, title, yformat, selection }: any) => {
   return (
     <Chart
       key={graphType}
@@ -19,6 +19,9 @@ export const ChartDailyDebit = ({ graphType, series, title, yformat }: any) => {
           sparkline: {
             enabled: true,
           },
+          events: {
+            dataPointSelection: selection,
+          }
         },
         colors: ["#0072ff"],
         title: {

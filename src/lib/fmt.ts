@@ -22,18 +22,17 @@ export const extractDataSource = (obj: any) => {
     return arr;
   };
 
-export const extractDailyDebitCredit = (
+  export const extractDailyDebitCredit = (
     obj: any,
     type: "debited" | "credited",
     r: any
   ) => {
     const len = dayjs(r.to).diff(dayjs(r.from), "day");
-    const data: any[] = Array.from({ length: len }, (_, i) => ({
-      x: dayjs(r.to)
-        .subtract(len - i, "day")
-        .format("DD-MM-YYYY"),
-      y: 0.0,
-    }));
+    const dateMap = new Map<string, number>();
+    for (let i = 0; i < len; i++) {
+      const date = dayjs(r.to).subtract(len - i, "day").format("DD-MM-YYYY");
+      dateMap.set(date, 0.0);
+    }
     const arr = castToArray(obj)
       .sort(
         (a: any, b: any) =>
@@ -46,13 +45,18 @@ export const extractDailyDebitCredit = (
           dayjs(item?.date, "DD-MM-YYYY").isBefore(r.to)
       );
     arr.forEach((item: any) => {
-      const idx =
-        len - dayjs(r.to).diff(dayjs(item?.date, "DD-MM-YYYY"), "day") - 1;
-      data[idx].y += parseFloat(item?.[type] ?? 0.0);
+      const itemDate = dayjs(item?.date, "DD-MM-YYYY").format("DD-MM-YYYY");
+      if (dateMap.has(itemDate)) {
+        const newValue = (dateMap.get(itemDate) ?? 0) + parseFloat(item?.[type] ?? 0.0);
+        dateMap.set(itemDate, newValue);
+      }
     });
-
-    return data;
-};
+    const result = Array.from(dateMap.entries()).map(([date, value]) => ({
+      x: date,
+      y: value,
+    }));
+    return result;
+  };
 
 export const debitSumDataGet = ({queries}: any) => {
     let data = [];

@@ -6,6 +6,7 @@ export const ChartDailyCredit = ({
   series,
   title,
   yformat,
+  selection,
 }: any) => {
   return (
     <Chart
@@ -24,6 +25,9 @@ export const ChartDailyCredit = ({
           sparkline: {
             enabled: true,
           },
+          events: {
+            dataPointSelection: selection,
+          }
         },
         colors: ["#00E396"],
         title: {

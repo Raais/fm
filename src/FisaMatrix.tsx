@@ -1,3 +1,5 @@
+import * as chrono from "chrono-node";
+
 import {
   AreaChartOutlined,
   BarChartOutlined,
@@ -60,9 +62,8 @@ import {
 } from "./lib/db/models/categories";
 import { cmd_createRecords, parseCSVData } from "./lib/db/models/transactions";
 import { renderCat, salaryMonthPrompt } from "./lib/extra";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQueries, useResultTable, useStore } from "tinybase/debug/ui-react";
-import * as chrono from "chrono-node";
 
 import { ChartCategoryAggregates } from "./components/ChartCategoryAggregates";
 import { ChartCategoryBreakdown } from "./components/ChartCategoryBreakdown";
@@ -93,6 +94,9 @@ export const FisaMatrix = () => {
   const [graphType, setGraphType] = useState<"bar" | "area" | "line">("bar");
   const [aggregateType, setAggregateType] = useState<"sum" | "count">("sum");
   const [repeatsType, setRepeatsType] = useState<"repeats" | "all">("all");
+
+  const [datasetOpen, setDatasetOpen] = useState<any>([]);
+  const datasetRef = useRef<any>(null);
 
   const [openStates, setOpenStates] = useState({
     modalCat: false,
@@ -285,6 +289,22 @@ export const FisaMatrix = () => {
     setTrxFiltered(filtered);
   };
 
+  const handleGotoDate = (_e: any, _chart: any, options: any) => {
+    const date = options.w.globals.labels[options?.dataPointIndex];
+    if (date) {
+      if (datasetOpen.length === 0) setDatasetOpen(["1"]);
+      if (datasetRef.current) {
+        const filtered = extractDataSource(trx).filter((i: any) =>
+          dayjs(i.date, "DD-MM-YYYY").isSame(dayjs(date, "DD-MM-YYYY"), "day")
+        );
+        if (filtered.length > 0) {
+          setTrxFiltered(filtered);
+          datasetRef.current.scrollIntoView();
+        }
+      }
+    }
+  };
+
   const closeModalInfo = () => {
     modalInfo.close();
     localStorage.setItem("infoShown", "true");
@@ -372,6 +392,14 @@ export const FisaMatrix = () => {
               }}
             >
               <Button
+                onClick={() => {
+                  setDatasetOpen(datasetOpen.length > 0 ? [] : ["1"]);
+                  if (datasetRef.current) datasetRef.current.scrollIntoView();
+                }}
+              >
+                Test
+              </Button>
+              <Button
                 href="https://github.com/Raais/fm"
                 target="_blank"
                 htmlType="button"
@@ -446,6 +474,7 @@ export const FisaMatrix = () => {
                     yformat={function (val: any) {
                       return curr(val);
                     }}
+                    selection={handleGotoDate}
                   />
                 </div>
               </Card>
@@ -470,6 +499,7 @@ export const FisaMatrix = () => {
                     yformat={function (val: any) {
                       return curr(val);
                     }}
+                    selection={handleGotoDate}
                   />
                 </div>
               </Card>
@@ -695,6 +725,11 @@ export const FisaMatrix = () => {
           </Card>
 
           <Collapse
+            ref={datasetRef}
+            activeKey={datasetOpen}
+            onChange={(keys: any) => {
+              setDatasetOpen(keys);
+            }}
             items={[
               {
                 key: "1",
@@ -723,20 +758,37 @@ export const FisaMatrix = () => {
                 children: (
                   <Flex vertical gap="middle">
                     <Flex style={{ flex: 1, justifyContent: "flex-end" }}>
-                      <AutoComplete
-                        popupMatchSelectWidth={true}
-                        style={{ width: 250 }}
-                        options={searchAutocomplete}
-                        onSelect={(value: any) => debounce(handleSearch)(value)}
-                        onSearch={(value: any) => debounce(handleSearch)(value)}
-                        size="large"
-                      >
-                        <Input.Search
-                          size="middle"
-                          allowClear
-                          placeholder="search anything"
+                      <Flex>
+                        <Button
+                          size="small"
+                          icon={
+                            <CloseOutlined style={{ color: "#77777740" }} />
+                          }
+                          type="text"
+                          onClick={() => {
+                            setTrxFiltered(null);
+                            setLastSearch(null);
+                          }}
                         />
-                      </AutoComplete>
+                        <AutoComplete
+                          popupMatchSelectWidth={true}
+                          style={{ width: 250 }}
+                          options={searchAutocomplete}
+                          onSelect={(value: any) =>
+                            debounce(handleSearch)(value)
+                          }
+                          onSearch={(value: any) =>
+                            debounce(handleSearch)(value)
+                          }
+                          size="large"
+                        >
+                          <Input.Search
+                            size="middle"
+                            allowClear
+                            placeholder="search anything"
+                          />
+                        </AutoComplete>
+                      </Flex>
                       <Flex
                         style={{
                           display: "flex",
@@ -850,7 +902,6 @@ export const FisaMatrix = () => {
                         <Button
                           type="primary"
                           onClick={() => {
-                            console.log(catName, catEmoji, catColor);
                             cmd_addCategory(store, catName, catEmoji, catColor);
                             setCatName("");
                             //setCatEmoji("");
@@ -1114,6 +1165,7 @@ export const FisaMatrix = () => {
                         </Card>
                         <Card title="Mock Data" bordered={true}>
                           <Button
+                            type="dashed"
                             onClick={() => {
                               if (extractDataSource(trx).length > 0) {
                                 message.error(
