@@ -9,8 +9,12 @@ export default defineConfig({
       "Cross-Origin-Embedder-Policy": "require-corp",
     },
     host: "0.0.0.0",
+    base: '/fm/',
   },
   optimizeDeps: {
     exclude: ["@sqlite.org/sqlite-wasm"],
   },
+  build: {
+    commonjsOptions: { transformMixedEsModules: true },
+  }
 });
