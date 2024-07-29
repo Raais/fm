@@ -1,0 +1,37 @@
+{
+  "name": "vite-tinybase-ts-react",
+  "version": "1.1.1",
+  "scripts": {
+    "dev": "vite --force",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "typescript": "^5.4.2",
+    "vite": "^5.1.6"
+  },
+  "dependencies": {
+    "@emoji-mart/data": "^1.2.1",
+    "@emoji-mart/react": "^1.1.1",
+    "@sqlite.org/sqlite-wasm": "^3.45.2-build1",
+    "@types/papaparse": "^5.3.14",
+    "@types/sqlite3": "^3.1.11",
+    "antd": "^5.15.3",
+    "apexcharts": "^3.48.0",
+    "axios": "^1.6.8",
+    "chrono-node": "^2.7.6",
+    "dayjs": "^1.11.10",
+    "emoji-mart": "^5.6.0",
+    "javascript-time-ago": "^2.5.9",
+    "minisearch": "^7.1.0",
+    "papaparse": "^5.4.1",
+    "react": "^18.2.0",
+    "react-apexcharts": "^1.4.1",
+    "react-dom": "^18.2.0",
+    "react-time-ago": "^7.3.1",
+    "sqlite3": "^5.1.7",
+    "tinybase": "^4.7.1"
+  }
+}

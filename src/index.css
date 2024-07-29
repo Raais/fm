@@ -1,0 +1,79 @@
+body {
+  margin: 0;
+  font-family: 'GT Walsheim', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+body {
+  background-color: #090909;
+}
+
+.fade-in {
+  opacity: 0.1;
+}
+
+.fade-in:hover {
+  opacity: 1;
+}
+
+#catbkdn .apexcharts-tooltip {
+  color: #ffffff !important;
+  background: #141414 !important;
+  border: 0px !important;
+}
+
+#catbkdn .apexcharts-tooltip .apexcharts-tooltip-series-group.active {
+  color: #ffffff !important;
+  background: #141414 !important;
+  border: 0px !important;
+}
+
+#root {
+  margin: 2rem auto;
+  max-width: 70rem;
+}
+
+.hover-glow {
+  cursor: pointer;
+}
+
+.hover-glow:hover {
+  filter: brightness(1.2);
+}
+
+.hover-glow-text {
+  cursor: pointer;
+}
+
+.hover-glow-text:hover {
+  border-bottom: 1px solid #f1c40f80;
+}
+
+.title-gradient {
+  background-color: #0072ff;
+    background-image: linear-gradient(45deg, #0072ff, #00c6ff);
+    background-size: 100%;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent; 
+    -moz-text-fill-color: transparent;
+}
+
+.floating-div {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 100;
+  background-color: #141414;
+  border-radius: 32px;
+  padding: 6px;
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
+}
