@@ -392,14 +392,6 @@ export const FisaMatrix = () => {
               }}
             >
               <Button
-                onClick={() => {
-                  setDatasetOpen(datasetOpen.length > 0 ? [] : ["1"]);
-                  if (datasetRef.current) datasetRef.current.scrollIntoView();
-                }}
-              >
-                Test
-              </Button>
-              <Button
                 href="https://github.com/Raais/fm"
                 target="_blank"
                 htmlType="button"
