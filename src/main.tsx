@@ -21,6 +21,9 @@ import { appQueries } from "./lib/db/queries/queries";
 import en from "javascript-time-ago/locale/en.json";
 import { useState } from "react";
 
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
 TimeAgo.addDefaultLocale(en);
 
 const App = () => {
