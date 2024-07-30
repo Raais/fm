@@ -23,7 +23,9 @@ import { useState } from "react";
 
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import advancedFormat from "dayjs/plugin/advancedFormat";
 dayjs.extend(customParseFormat);
+dayjs.extend(advancedFormat);
 TimeAgo.addDefaultLocale(en);
 
 const App = () => {
