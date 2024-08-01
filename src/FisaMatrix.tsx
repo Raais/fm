@@ -624,7 +624,7 @@ export const FisaMatrix = () => {
                           ")"
                         }
                         labelFormat={function (val: any) {
-                          return `${categories[val]?.emoji} ${val}`;
+                          return val === '_undefined_' ? 'Uncategorized' : `${categories[val]?.emoji} ${val}`;
                         }}
                         valueFormat={function (val: any) {
                           return aggregateType === "sum"
