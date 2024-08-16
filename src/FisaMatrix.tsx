@@ -94,6 +94,7 @@ export const FisaMatrix = () => {
   const [graphType, setGraphType] = useState<"bar" | "area" | "line">("bar");
   const [aggregateType, setAggregateType] = useState<"sum" | "count">("sum");
   const [repeatsType, setRepeatsType] = useState<"repeats" | "all">("all");
+  const [colorizeDaily, setColorizeDaily] = useState<"true" | "false">("true");
 
   const [datasetOpen, setDatasetOpen] = useState<any>([]);
   const datasetRef = useRef<any>(null);
@@ -140,6 +141,11 @@ export const FisaMatrix = () => {
     }
     if (localStorage.getItem("repeatsType")) {
       setRepeatsType(localStorage.getItem("repeatsType") as "repeats" | "all");
+    }
+    if (localStorage.getItem("colorizeDaily")) {
+      setColorizeDaily(
+        localStorage.getItem("colorizeDaily") as "true" | "false"
+      );
     }
     if (!localStorage.getItem("infoShown")) {
       modalInfo.open();
@@ -471,16 +477,23 @@ export const FisaMatrix = () => {
                     series={[
                       {
                         name: "debit",
-                        data: extractDailyDebitCredit(
+                        data: colorizeDaily === "true" ? extractDailyDebitCredit(
                           trx,
                           "debited",
-                          rangeData(filterRange)
-                        ),
+                          rangeData(filterRange),
+                          categories
+                        ) : extractDailyDebitCredit(
+                          trx,
+                          "debited",
+                          rangeData(filterRange),
+                          categories
+                        ).map((el: any) => ({x: el.x, y: el.y, topCategory: el.topCategory})),
                       },
                     ]}
                     title={curr(debitAgrs[0]?.sum.toString() ?? "0", "", "")}
-                    yformat={function (val: any) {
-                      return curr(val);
+                    yformat={function (val: any, opts: any) {
+                      const cat = opts.w.config.series[0].data[opts.dataPointIndex]?.topCategory;
+                      return cat !== '_undefined_' ? `${curr(val)} [top: ${cat}]` : curr(val);
                     }}
                     selection={handleGotoDate}
                   />
@@ -499,8 +512,9 @@ export const FisaMatrix = () => {
                         data: extractDailyDebitCredit(
                           trx,
                           "credited",
-                          rangeData(filterRange)
-                        ),
+                          rangeData(filterRange),
+                          categories
+                        ).map((el: any) => ({x: el.x, y: el.y})),
                       },
                     ]}
                     title={curr(creditAgrs[0]?.sum.toString() ?? "0", "", "")}
@@ -1032,6 +1046,19 @@ export const FisaMatrix = () => {
                                 }}
                               />
                               <span>Graph Type</span>
+                            </Flex>
+                          </Tag>
+                          <Tag color="#141414">
+                            <Flex gap="middle">
+                              <Switch
+                                checked={colorizeDaily === "true"}
+                                onChange={(value) => {
+                                  setColorizeDaily(value ? "true" : "false");
+                                  localStorage.setItem("colorizeDaily", value ? "true" : "false");
+                                  //window.location.reload();
+                                }}
+                              />
+                              <span>Colorize Daily</span>
                             </Flex>
                           </Tag>
                         </Flex>

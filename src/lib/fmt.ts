@@ -25,14 +25,17 @@ export const extractDataSource = (obj: any) => {
   export const extractDailyDebitCredit = (
     obj: any,
     type: "debited" | "credited",
-    r: any
+    r: any,
+    categories: any
   ) => {
     const len = dayjs(r.to).diff(dayjs(r.from), "day");
-    const dateMap = new Map<string, number>();
+    const dateMap = new Map<string, { amount: number; category: string; categoryTotals: Map<string, number>}>();
+  
     for (let i = 0; i < len; i++) {
       const date = dayjs(r.to).subtract(len - i, "day").format("DD-MM-YYYY");
-      dateMap.set(date, 0.0);
+      dateMap.set(date, { amount: 0.0, category: "_undefined_", categoryTotals: new Map<string, number>()});
     }
+  
     const arr = castToArray(obj)
       .sort(
         (a: any, b: any) =>
@@ -44,17 +47,40 @@ export const extractDataSource = (obj: any) => {
           dayjs(item?.date, "DD-MM-YYYY").isAfter(r.from) &&
           dayjs(item?.date, "DD-MM-YYYY").isBefore(r.to)
       );
+  
     arr.forEach((item: any) => {
       const itemDate = dayjs(item?.date, "DD-MM-YYYY").format("DD-MM-YYYY");
+      const itemCategory = item?.category ?? '_undefined_';
+      const itemAmount = parseFloat(item?.[type] ?? 0.0);
+  
       if (dateMap.has(itemDate)) {
-        const newValue = (dateMap.get(itemDate) ?? 0) + parseFloat(item?.[type] ?? 0.0);
-        dateMap.set(itemDate, newValue);
+        const dateEntry = dateMap.get(itemDate)!;
+        dateEntry.amount += itemAmount;
+
+        if (type === "debited") {
+          dateEntry.categoryTotals.set(
+            itemCategory,
+            (dateEntry.categoryTotals.get(itemCategory) ?? 0) + itemAmount
+          );
+          
+          dateEntry.category = [...dateEntry.categoryTotals.entries()].reduce(
+            (maxCategory, [category, total]) => total > maxCategory[1] ? [category, total] : maxCategory,
+            ["", 0]
+          )[0];
+        }
+
+        dateMap.set(itemDate, dateEntry);
       }
     });
-    const result = Array.from(dateMap.entries()).map(([date, value]) => ({
+  
+    const result = Array.from(dateMap.entries()).map(([date, { amount, category }]) => ({
       x: date,
-      y: value,
+      y: amount,
+      topCategory: category,
+      fillColor: category === '_undefined_' ? '#1677ff' : categories[category]?.color ?? '#1677ff',
+      strokeColor: category === '_undefined_' ? '#1677ff' : categories[category]?.color ?? '#1677ff',
     }));
+
     return result;
   };
 
