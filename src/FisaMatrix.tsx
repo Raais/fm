@@ -284,6 +284,22 @@ export const FisaMatrix = () => {
         filtered = extractDataSource(trx).filter((i: any) =>
           dayjs(i.date, "DD-MM-YYYY").isSame(date, "day")
         );
+      } else {
+        if (value.startsWith(">") || value.startsWith("<")) {
+          const op = value[0];
+          const number = parseFloat(value.slice(1).replace(/[^0-9.]/g, ""));
+          if (!isNaN(number)) {
+            filtered = extractDataSource(trx).filter((i: any) => {
+              const debited = parseFloat(i?.debited);
+              const credited = parseFloat(i?.credited);
+              if (op === ">") {
+                return debited > number || credited > number;
+              } else {
+                return debited < number || credited < number;
+              }
+            });
+          }
+        }
       }
     }
     setTrxFiltered(filtered);
@@ -804,7 +820,7 @@ export const FisaMatrix = () => {
                               borderRadius: "2px",
                             }}
                             color="#141414"
-                            title={`Search "salary" "bakery" "ahmed" "transfer" "uncategorized" ...or a date in any format "last friday" "three days ago" "22 jul"`}
+                            title={`Search "salary" "bakery" "ahmed" "transfer" "uncategorized" ">5000" ...or a date in any format "last friday" "three days ago" "22 jul"`}
                           >
                             <InfoCircleOutlined
                               style={{ color: "#77777730" }}
