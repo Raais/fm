@@ -77,3 +77,35 @@ body {
   padding: 6px;
   box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
 }
+
+.tally {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  z-index: 100;
+  background-color: #141414;
+  border-radius: 32px;
+  padding: 6px;
+  color: #777777;
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
+}
+
+.tally-clear {
+  display: none;
+}
+
+.tally:hover .tally-clear {
+  display: block;
+  animation: fade_in_show 0.2s ease-in-out;
+}
+
+@keyframes fade_in_show {
+  0% {
+       opacity: 0;
+       transform: scale(0)
+  }
+
+  100% {
+       opacity: 1;
+       transform: scale(1)
+ 

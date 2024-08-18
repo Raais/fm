@@ -152,6 +152,12 @@ export const FisaMatrix = () => {
     }
   }, []);
 
+  const [tally, setTally] = useState<number | null>(null);
+
+  const addToTally = (value: number) => {
+    setTally((prevTally) => (prevTally !== null ? prevTally + value : value));
+  };
+
   const store = useStore();
   const queries = useQueries();
 
@@ -466,6 +472,22 @@ export const FisaMatrix = () => {
         </ConfigProvider>
       </div>
       {modalCtxHolder}
+      {tally && (
+        <div className="tally">
+          <Flex>
+            <Flex className="tally-clear">
+              <Button
+                type="text"
+                size="small"
+                icon={<CloseOutlined />}
+                style={{ color: "#777777" }}
+                onClick={() => setTally(null)}
+              />
+            </Flex>
+            <Typography.Text type="secondary">{curr(tally.toString())}</Typography.Text>
+          </Flex>
+        </div>
+      )}
       <Layout.Content style={{ margin: "16px 16px" }}>
         <Flex vertical gap="middle">
           <Row gutter={16}>
@@ -477,23 +499,34 @@ export const FisaMatrix = () => {
                     series={[
                       {
                         name: "debit",
-                        data: colorizeDaily === "true" ? extractDailyDebitCredit(
-                          trx,
-                          "debited",
-                          rangeData(filterRange),
-                          categories
-                        ) : extractDailyDebitCredit(
-                          trx,
-                          "debited",
-                          rangeData(filterRange),
-                          categories
-                        ).map((el: any) => ({x: el.x, y: el.y, topCategory: el.topCategory})),
+                        data:
+                          colorizeDaily === "true"
+                            ? extractDailyDebitCredit(
+                                trx,
+                                "debited",
+                                rangeData(filterRange),
+                                categories
+                              )
+                            : extractDailyDebitCredit(
+                                trx,
+                                "debited",
+                                rangeData(filterRange),
+                                categories
+                              ).map((el: any) => ({
+                                x: el.x,
+                                y: el.y,
+                                topCategory: el.topCategory,
+                              })),
                       },
                     ]}
                     title={curr(debitAgrs[0]?.sum.toString() ?? "0", "", "")}
                     yformat={function (val: any, opts: any) {
-                      const cat = opts.w.config.series[0].data[opts.dataPointIndex]?.topCategory;
-                      return cat !== '_undefined_' ? `${curr(val)} [top: ${cat}]` : curr(val);
+                      const cat =
+                        opts.w.config.series[0].data[opts.dataPointIndex]
+                          ?.topCategory;
+                      return cat !== "_undefined_"
+                        ? `${curr(val)} [top: ${cat}]`
+                        : curr(val);
                     }}
                     selection={handleGotoDate}
                   />
@@ -514,7 +547,7 @@ export const FisaMatrix = () => {
                           "credited",
                           rangeData(filterRange),
                           categories
-                        ).map((el: any) => ({x: el.x, y: el.y})),
+                        ).map((el: any) => ({ x: el.x, y: el.y })),
                       },
                     ]}
                     title={curr(creditAgrs[0]?.sum.toString() ?? "0", "", "")}
@@ -654,7 +687,9 @@ export const FisaMatrix = () => {
                           ")"
                         }
                         labelFormat={function (val: any) {
-                          return val === '_undefined_' ? 'Uncategorized' : `${categories[val]?.emoji} ${val}`;
+                          return val === "_undefined_"
+                            ? "Uncategorized"
+                            : `${categories[val]?.emoji} ${val}`;
                         }}
                         valueFormat={function (val: any) {
                           return aggregateType === "sum"
@@ -698,6 +733,10 @@ export const FisaMatrix = () => {
                                 catBkdn.data[opts.seriesIndex]?.sum.toString()
                               )})`;
                         }}
+                        selection={function (_e: any, _chart: any, opts: any) {
+                          const value = opts.w.globals.series[opts.dataPointIndex];
+                          addToTally(value);
+                        }}
                       />
                     </Col>
                   </Row>
@@ -726,6 +765,10 @@ export const FisaMatrix = () => {
                         : `${val} (${curr(
                             debitRepeatsData[opts.seriesIndex]?.sum.toString()
                           )})`;
+                    }}
+                    selection={function (_e: any, _chart: any, opts: any) {
+                      const value = opts.w.globals.series[opts.dataPointIndex];
+                      addToTally(value);
                     }}
                   />
                 )}
@@ -851,6 +894,7 @@ export const FisaMatrix = () => {
                       categories={categories}
                       to_category_ranked={to_category_ranked}
                       store={store}
+                      addToTally={addToTally}
                     />
                   </Flex>
                 ),
@@ -1054,7 +1098,10 @@ export const FisaMatrix = () => {
                                 checked={colorizeDaily === "true"}
                                 onChange={(value) => {
                                   setColorizeDaily(value ? "true" : "false");
-                                  localStorage.setItem("colorizeDaily", value ? "true" : "false");
+                                  localStorage.setItem(
+                                    "colorizeDaily",
+                                    value ? "true" : "false"
+                                  );
                                   //window.location.reload();
                                 }}
                               />

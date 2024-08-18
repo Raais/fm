@@ -6,6 +6,7 @@ export const ChartDebitRepeats = ({
   title,
   labels,
   tooltipFormat,
+  selection,
 }: any) => {
   return (
     <Chart
@@ -18,6 +19,9 @@ export const ChartDebitRepeats = ({
           type: "pie",
           foreColor: "grey",
           dropShadow: { enabled: false },
+          events: {
+            dataPointSelection: selection,
+          }
         },
         legend: { position: "left" },
         title: {

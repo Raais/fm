@@ -24,6 +24,7 @@ export const TableDataset = ({
   categories,
   to_category_ranked,
   store,
+  addToTally,
 }: any) => {
   return (
     <Table
@@ -232,11 +233,11 @@ export const TableDataset = ({
             const debited = parseFloat(record?.debited);
             const credited = parseFloat(record?.credited);
             return debited > 0 ? (
-              <Tag bordered={false} color="red">
+              <Tag bordered={false} color="red" onClick={()=>addToTally(record?.debited)} style={{cursor: "pointer"}}>
                 <strong>{`- ${curr(record?.debited, "")}`}</strong>
               </Tag>
             ) : credited > 0 ? (
-              <Tag bordered={false} color="green">
+              <Tag bordered={false} color="green" onClick={()=>addToTally(record?.credited)} style={{cursor: "pointer"}}>
                 <strong>{`+ ${curr(record?.credited, "")}`}</strong>
               </Tag>
             ) : (

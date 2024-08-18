@@ -5,6 +5,7 @@ export const ChartCategoryBreakdown = ({
   series,
   catBkdn,
   yformat,
+  selection,
 }: any) => {
   return (
     <div id="catbkdn">
@@ -20,6 +21,9 @@ export const ChartCategoryBreakdown = ({
             type: "pie",
             foreColor: "grey",
             dropShadow: { enabled: false },
+            events: {
+              dataPointSelection: selection,
+            }
           },
           legend: {
             position: "left",
