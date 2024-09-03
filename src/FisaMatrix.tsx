@@ -525,7 +525,7 @@ export const FisaMatrix = () => {
                         opts.w.config.series[0].data[opts.dataPointIndex]
                           ?.topCategory;
                       return cat !== "_undefined_"
-                        ? `${curr(val)} [top: ${cat}]`
+                        ? `${curr(val)} [top: ${categories[cat]?.emoji} ${cat}]`
                         : curr(val);
                     }}
                     selection={handleGotoDate}
