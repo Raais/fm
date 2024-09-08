@@ -62,9 +62,11 @@ export const rangeToStr : any = {
   "1y": "1 Year",
   "90d": "90 Days",
   "7d": "7 Days",
+  "10d": "10 Days",
   "15d": "15 Days",
   "20d": "20 Days",
   "30d": "30 Days",
+  "60d": "60 Days",
   "all": "All",
   "_lm": "Last Month",
   "_cm": "Current Month",
@@ -99,9 +101,11 @@ function getMostRecentMonthStart(month: number) {
 export const rangeData = (range: string) => {
   switch (range) {
     case "7d": return { from: dayjs().subtract(7, "day"), to: dayjs() };
+    case "10d": return { from: dayjs().subtract(10, "day"), to: dayjs() };
     case "15d": return { from: dayjs().subtract(15, "day"), to: dayjs() };
     case "20d": return { from: dayjs().subtract(20, "day"), to: dayjs() };
     case "30d": return { from: dayjs().subtract(30, "day"), to: dayjs() };
+    case "60d": return { from: dayjs().subtract(60, "day"), to: dayjs() };
     case "90d": return { from: dayjs().subtract(90, "day"), to: dayjs() };
     case "1y": return { from: dayjs().subtract(365, "day"), to: dayjs() };
     case "all": return { from: dayjs().subtract(365, "day"), to: dayjs() };

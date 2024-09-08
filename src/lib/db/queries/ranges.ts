@@ -5,6 +5,11 @@ export const in_7d = (getCell: any) =>
     dayjs().subtract(7, "day")
   );
 
+export const in_10d = (getCell: any) =>
+  dayjs(getCell("date")?.toString(), "YYYY-MM-DD").isAfter(
+    dayjs().subtract(10, "day")
+  );
+
 export const in_15d = (getCell: any) =>
   dayjs(getCell("date")?.toString(), "YYYY-MM-DD").isAfter(
     dayjs().subtract(15, "day")
@@ -18,6 +23,11 @@ export const in_20d = (getCell: any) =>
 export const in_30d = (getCell: any) =>
   dayjs(getCell("date")?.toString(), "YYYY-MM-DD").isAfter(
     dayjs().subtract(30, "day")
+  );
+
+export const in_60d = (getCell: any) =>
+  dayjs(getCell("date")?.toString(), "YYYY-MM-DD").isAfter(
+    dayjs().subtract(60, "day")
   );
 
 export const in_90d = (getCell: any) =>
