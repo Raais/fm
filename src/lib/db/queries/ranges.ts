@@ -5,6 +5,16 @@ export const in_7d = (getCell: any) =>
     dayjs().subtract(7, "day")
   );
 
+export const in_15d = (getCell: any) =>
+  dayjs(getCell("date")?.toString(), "YYYY-MM-DD").isAfter(
+    dayjs().subtract(15, "day")
+  );
+
+export const in_20d = (getCell: any) =>
+  dayjs(getCell("date")?.toString(), "YYYY-MM-DD").isAfter(
+    dayjs().subtract(20, "day")
+  );
+
 export const in_30d = (getCell: any) =>
   dayjs(getCell("date")?.toString(), "YYYY-MM-DD").isAfter(
     dayjs().subtract(30, "day")
